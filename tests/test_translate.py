@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ghdigest.translate import (
+from github_reader.translate import (
     TRANSLATABLE,
     Unit,
     apply_translations,
@@ -324,7 +324,7 @@ class TestRealDigest(unittest.TestCase):
         self.assertEqual(
             len(out.split("\n")), len(markdown.split("\n")) + len(parsed.units)
         )
-        for must_keep in ("扫描了 **", "★`", "```bash", "> 领域分布", "*由 ghdigest 生成于"):
+        for must_keep in ("扫描了 **", "★`", "```bash", "> 领域分布", "*由 github-reader 生成于"):
             self.assertIn(must_keep, out)
         self.assertEqual(parse_digest(out).units, [])
 
@@ -365,7 +365,7 @@ class TestLatestSync(unittest.TestCase):
         import tempfile
         from unittest.mock import patch
 
-        from ghdigest import translate as T
+        from github_reader import translate as T
 
         with tempfile.TemporaryDirectory() as td:
             d = Path(td)
@@ -388,7 +388,7 @@ class TestLatestSync(unittest.TestCase):
         import tempfile
         from unittest.mock import patch
 
-        from ghdigest import translate as T
+        from github_reader import translate as T
 
         with tempfile.TemporaryDirectory() as td:
             dated = Path(td) / "2026-09-20.md"

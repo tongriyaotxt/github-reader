@@ -1,15 +1,15 @@
-# ghdigest
+# github-reader
 
 [中文](README.md) · **English**
 
 Turn GitHub activity into a daily digest you can actually finish reading.
 
 The problem isn't "I can't find projects" — it's that finding them is slow, draining, and you
-forget what you saw. `ghdigest` searches a configurable set of domains, filters out the noise,
+forget what you saw. `github-reader` searches a configurable set of domains, filters out the noise,
 estimates how long each project takes to get running, and remembers what you saw yesterday.
 
 ```bash
-python -m ghdigest --zh
+python -m github_reader --zh
 ```
 
 > This is the short English overview. **[README.md](README.md) (Chinese) is the full reference** —
@@ -35,7 +35,7 @@ then a one-line-each activity list.
 - **GitHub credentials** — optional but strongly recommended
 
 Unauthenticated GitHub API access allows 60 requests/hour; authenticated allows 5000. That gap
-decides how many candidates get scanned. ghdigest reuses your GitHub CLI credentials automatically:
+decides how many candidates get scanned. github-reader reuses your GitHub CLI credentials automatically:
 
 ```bash
 gh auth status     # if you're logged in, you're set
@@ -46,12 +46,12 @@ Otherwise set `GITHUB_TOKEN` (or `GH_TOKEN`).
 ## Usage
 
 ```bash
-python -m ghdigest                      # generate today's digest
-python -m ghdigest --top 8 --feed 30    # 8 featured + 30 activity entries
-python -m ghdigest --domains ai         # only AI/LLM/Agent
-python -m ghdigest --offline            # cache only, no quota spent
-python -m ghdigest --verbose            # show filtered-out repos and why
-python -m ghdigest --out ./notes        # custom output directory
+python -m github_reader                      # generate today's digest
+python -m github_reader --top 8 --feed 30    # 8 featured + 30 activity entries
+python -m github_reader --domains ai         # only AI/LLM/Agent
+python -m github_reader --offline            # cache only, no quota spent
+python -m github_reader --verbose            # show filtered-out repos and why
+python -m github_reader --out ./notes        # custom output directory
 ```
 
 A full run takes ~105 seconds and ~450 API calls (3 domains, 24 keywords, 360 candidates).
@@ -65,8 +65,8 @@ search queries embed a date window that changes the cache key.
 replacement — the English original is always preserved.
 
 ```bash
-python -m ghdigest --zh          # fetch + generate + translate
-python -m ghdigest --zh-only     # no fetching, just backfill Chinese (fast, no GitHub quota)
+python -m github_reader --zh          # fetch + generate + translate
+python -m github_reader --zh-only     # no fetching, just backfill Chinese (fast, no GitHub quota)
 ```
 
 It reuses `DEEPSEEK_API_KEY` from `~/.dsh/.credentials.yaml` (or the env var). Translation is
@@ -115,7 +115,7 @@ per domain is a comfortable amount. Other dials: `min_stars_fresh`, `min_stars_e
 ## Development
 
 ```bash
-python tests/test_ghdigest.py     # 47 tests: fetching, filtering, analysis, rendering, state
+python tests/test_github_reader.py     # 47 tests: fetching, filtering, analysis, rendering, state
 python tests/test_translate.py    # 29 tests: the structural work of Chinese translation
 ```
 
@@ -125,14 +125,14 @@ idempotency requiring a two-pass scan. See the Chinese README for the full list.
 
 | File | Responsibility |
 |---|---|
-| `ghdigest/github_client.py` | API client: credentials, rate-limit backoff, disk cache |
-| `ghdigest/discover.py` | Candidate discovery, momentum scoring, noise filtering |
-| `ghdigest/analyze.py` | README heuristics: summary, install method, onboarding cost |
-| `ghdigest/state.py` | Cross-run state: consecutive days, star deltas |
-| `ghdigest/render.py` | Markdown rendering |
-| `ghdigest/llm.py` | LLM calls (reuses `~/.dsh` credentials) |
-| `ghdigest/translate.py` | Chinese summaries: location, batching, validation, write-back |
-| `ghdigest/cli.py` | Main flow orchestration |
+| `github_reader/github_client.py` | API client: credentials, rate-limit backoff, disk cache |
+| `github_reader/discover.py` | Candidate discovery, momentum scoring, noise filtering |
+| `github_reader/analyze.py` | README heuristics: summary, install method, onboarding cost |
+| `github_reader/state.py` | Cross-run state: consecutive days, star deltas |
+| `github_reader/render.py` | Markdown rendering |
+| `github_reader/llm.py` | LLM calls (reuses `~/.dsh` credentials) |
+| `github_reader/translate.py` | Chinese summaries: location, batching, validation, write-back |
+| `github_reader/cli.py` | Main flow orchestration |
 
 Two decisions worth not "optimizing" away: **standard library only** (installing dependencies is
 itself a cost), and **the LLM does exactly one thing — translate** (everything else is

@@ -1,4 +1,4 @@
-# ghdigest
+# github-reader
 
 **中文** · [English](README.en.md)
 
@@ -7,7 +7,7 @@
 解决的问题不是「找不到项目」，而是「找太慢、太费心力、看完记不住」。
 
 ```bash
-python -m ghdigest --zh
+python -m github_reader --zh
 ```
 
 跑完在 `digests/2026-09-20.md` 得到一份日报，30 秒能判断今天值不值得花时间。
@@ -21,8 +21,8 @@ python -m ghdigest --zh
 是英文 description 的中文转述。
 
 ```bash
-python -m ghdigest --zh          # 抓取 + 生成 + 翻译
-python -m ghdigest --zh-only     # 不抓取，只给已有日报补中文（快，省配额）
+python -m github_reader --zh          # 抓取 + 生成 + 翻译
+python -m github_reader --zh-only     # 不抓取，只给已有日报补中文（快，省配额）
 ```
 
 英文原文**保留**在 `**是什么**` 里，中文作为独立字段附在下面：
@@ -55,7 +55,7 @@ python -m ghdigest --zh-only     # 不抓取，只给已有日报补中文（快
 ## 它和「打开 GitHub Trending 刷一刷」有什么不同
 
 Trending 给你的是**按热度排序的列表**，你还得自己判断每个项目是干什么的、要不要学。
-ghdigest 多做三件事：
+github-reader 多做三件事：
 
 1. **剔除噪音**。Trending 上长期混着 awesome-list、教程、面试题、常青巨库——
    它们星数极高但永远不是「新闻」。这些会被过滤掉。
@@ -78,7 +78,7 @@ ghdigest 多做三件事：
 未认证的 GitHub API 限额是 **60 次/小时**，而认证后是 **5000 次/小时**。
 这个差距直接决定日报质量——60 次大概只能扫到十几个候选。
 
-好消息是**你大概率不用做任何事**。ghdigest 会自动复用你已登录的 GitHub CLI 凭据：
+好消息是**你大概率不用做任何事**。github-reader 会自动复用你已登录的 GitHub CLI 凭据：
 
 ```bash
 gh auth status     # 如果显示已登录，就可以直接用了
@@ -98,25 +98,25 @@ export GITHUB_TOKEN=ghp_xxx
 ## 用法
 
 ```bash
-python -m ghdigest                      # 生成今天的日报
-python -m ghdigest --top 8 --feed 30    # 精选 8 条 + 动态 30 条
-python -m ghdigest --domains ai         # 只看 AI/LLM/Agent 方向
-python -m ghdigest --offline            # 只用缓存，不消耗配额
-python -m ghdigest --verbose            # 显示被过滤掉的仓库及原因
-python -m ghdigest --out ./notes         # 指定输出目录
+python -m github_reader                      # 生成今天的日报
+python -m github_reader --top 8 --feed 30    # 精选 8 条 + 动态 30 条
+python -m github_reader --domains ai         # 只看 AI/LLM/Agent 方向
+python -m github_reader --offline            # 只用缓存，不消耗配额
+python -m github_reader --verbose            # 显示被过滤掉的仓库及原因
+python -m github_reader --out ./notes         # 指定输出目录
 ```
 
 ### 常用组合
 
 ```bash
 # 想看过滤逻辑是否合理（调参时用这个）
-python -m ghdigest --verbose
+python -m github_reader --verbose
 
 # 想知道某个方向最近有什么新东西
-python -m ghdigest --domains ai --top 10
+python -m github_reader --domains ai --top 10
 
 # 没网 / 不想消耗配额时（注意：仍会重跑分析，耗时和正常跑差不多）
-python -m ghdigest --offline
+python -m github_reader --offline
 ```
 
 ### 关于耗时和配额（实测数据）
@@ -142,9 +142,9 @@ python -m ghdigest --offline
 ```powershell
 # 每天上午 9 点生成日报（含中文摘要）
 $action  = New-ScheduledTaskAction -Execute "python" `
-           -Argument "-m ghdigest --zh" -WorkingDirectory "<仓库目录>"
+           -Argument "-m github_reader --zh" -WorkingDirectory "<仓库目录>"
 $trigger = New-ScheduledTaskTrigger -Daily -At 9am
-Register-ScheduledTask -TaskName "ghdigest 日报" -Action $action -Trigger $trigger
+Register-ScheduledTask -TaskName "github-reader 日报" -Action $action -Trigger $trigger
 ```
 
 跑完直接看 `digests/latest.md` 就行（中文摘要会同步写进去）。
@@ -278,7 +278,7 @@ python tools/inspect_taglines.py --limit 25
 ## 开发
 
 ```bash
-python tests/test_ghdigest.py     # 47 个测试：抓取、筛选、分析、渲染、状态
+python tests/test_github_reader.py     # 47 个测试：抓取、筛选、分析、渲染、状态
 python tests/test_translate.py    # 29 个测试：中文翻译的结构性工作
 ```
 
@@ -319,14 +319,14 @@ python tests/test_translate.py    # 29 个测试：中文翻译的结构性工�
 
 | 文件 | 职责 |
 |---|---|
-| `ghdigest/github_client.py` | API 客户端：凭据解析、限流退避、磁盘缓存 |
-| `ghdigest/discover.py` | 候选发现：多路搜索、动量评分、噪音过滤 |
-| `ghdigest/analyze.py` | README 启发式分析：摘要、安装方式、上手成本 |
-| `ghdigest/state.py` | 跨运行状态：连续天数、星数增量 |
-| `ghdigest/render.py` | Markdown 渲染 |
-| `ghdigest/llm.py` | LLM 调用（复用 ~/.dsh 凭据，零依赖） |
-| `ghdigest/translate.py` | 中文摘要：定位字段、分批、校验、写回 |
-| `ghdigest/cli.py` | 主流程编排 |
+| `github_reader/github_client.py` | API 客户端：凭据解析、限流退避、磁盘缓存 |
+| `github_reader/discover.py` | 候选发现：多路搜索、动量评分、噪音过滤 |
+| `github_reader/analyze.py` | README 启发式分析：摘要、安装方式、上手成本 |
+| `github_reader/state.py` | 跨运行状态：连续天数、星数增量 |
+| `github_reader/render.py` | Markdown 渲染 |
+| `github_reader/llm.py` | LLM 调用（复用 ~/.dsh 凭据，零依赖） |
+| `github_reader/translate.py` | 中文摘要：定位字段、分批、校验、写回 |
+| `github_reader/cli.py` | 主流程编排 |
 | `.dsh/skills/zh-digest/` | 项目级 skill：何时补中文、怎么验证完成 |
 | `tools/simulate_next_day.py` | 模拟第二天运行，验证跨天趋势（否则得真等一天） |
 | `tools/inspect_taglines.py` | 抽查摘要质量，校准用 |

@@ -3,7 +3,7 @@
 每个测试都对应一个**实际踩过的坑**，不是形式化的覆盖率凑数：
 改动代码时如果不小心把坑踩回来，这里会红。
 
-运行： python -m pytest tests/ -v       （或 python tests/test_ghdigest.py）
+运行： python -m pytest tests/ -v       （或 python tests/test_github_reader.py）
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ghdigest.analyze import (
+from github_reader.analyze import (
     analyze,
     clean_markdown,
     _extract_install_methods,
@@ -24,10 +24,10 @@ from ghdigest.analyze import (
     _snap_to_word,
     _INSTALL_SECTION_RE,
 )
-from ghdigest.config import Settings
-from ghdigest.discover import Repo, _is_noise, _compute_signals
-from ghdigest.render import DigestEntry, _rate_label, render_digest, render_feed_line
-from ghdigest.state import State
+from github_reader.config import Settings
+from github_reader.discover import Repo, _is_noise, _compute_signals
+from github_reader.render import DigestEntry, _rate_label, render_digest, render_feed_line
+from github_reader.state import State
 
 
 NOW = datetime(2026, 9, 20, 12, 0, tzinfo=timezone.utc)

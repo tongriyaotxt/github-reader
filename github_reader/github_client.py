@@ -27,7 +27,7 @@ from typing import Any, Callable, Iterable
 from .config import CACHE_DIR
 
 API = "https://api.github.com"
-UA = "ghdigest/0.1 (+local personal digest tool)"
+UA = "github-reader/0.1 (+local personal digest tool)"
 
 
 class GitHubError(RuntimeError):

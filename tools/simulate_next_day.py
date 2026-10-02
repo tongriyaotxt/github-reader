@@ -2,7 +2,7 @@
 
 为什么需要这个工具：跨天趋势（累计增量、连续天数）是这个项目最有价值的
 功能之一，但天然没法在一天内验证。这个脚本让你立刻能测：
-改完状态后跑一次 ghdigest，就能看到「连续 2 天在榜，累计 +N ★」是否正确。
+改完状态后跑一次 github-reader，就能看到「连续 2 天在榜，累计 +N ★」是否正确。
 
 用法：
     python tools/simulate_next_day.py          # 回退一天
@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ghdigest.console import setup_console  # noqa: E402
+from github_reader.console import setup_console  # noqa: E402
 
 
 def main() -> int:
@@ -38,7 +38,7 @@ def main() -> int:
 
     if not path.exists():
         print(f"状态文件不存在：{path}")
-        print("先跑一次： python -m ghdigest")
+        print("先跑一次： python -m github_reader")
         return 1
 
     blob = json.loads(path.read_text(encoding="utf-8"))
@@ -75,7 +75,7 @@ def main() -> int:
     path.write_text(json.dumps(blob, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # 立刻回读校验。踩过坑：曾用 PowerShell 改写状态文件，
-    # 看起来成功但 ghdigest 读到的还是旧值，导致验证结论完全错误。
+    # 看起来成功但 github-reader 读到的还是旧值，导致验证结论完全错误。
     # 所以改完必须回读，且比较的是「文件里的值」和「修改前的值」。
     check = json.loads(path.read_text(encoding="utf-8"))
     new_last_seen = (
@@ -89,7 +89,7 @@ def main() -> int:
         print(f"样例 {first_name}: {original_last_seen} -> {new_last_seen}")
     print(f"回读校验: {'OK' if ok else 'FAILED —— 状态文件没有被正确改写'}")
     print()
-    print("现在运行 python -m ghdigest，应能看到「连续 N 天在榜」的趋势行")
+    print("现在运行 python -m github_reader，应能看到「连续 N 天在榜」的趋势行")
     return 0 if ok else 1
 
 

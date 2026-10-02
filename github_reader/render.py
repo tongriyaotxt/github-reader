@@ -304,7 +304,7 @@ def render_digest(
     out.append("---")
     out.append("")
     out.append(
-        f"*由 ghdigest 生成于 {run_at.strftime('%Y-%m-%d %H:%M')}*　"
+        f"*由 github-reader 生成于 {run_at.strftime('%Y-%m-%d %H:%M')}*　"
         f"*简介取自仓库 description（优先）或 README 抽取；"
         f"上手成本、安装方式为 README 结构启发式判断，非人工核实*"
     )

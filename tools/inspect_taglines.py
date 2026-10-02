@@ -14,13 +14,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ghdigest.analyze import (  # noqa: E402
+from github_reader.analyze import (  # noqa: E402
     _extract_tagline,
     _snap_to_word,
     clean_markdown,
 )
-from ghdigest.console import setup_console  # noqa: E402
-from ghdigest.github_client import GitHubClient  # noqa: E402
+from github_reader.console import setup_console  # noqa: E402
+from github_reader.github_client import GitHubClient  # noqa: E402
 
 
 def find_repos_with_cached_readme() -> list[tuple[str, str]]:

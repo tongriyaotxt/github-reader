@@ -1,11 +1,11 @@
 ---
 name: zh-digest
-description: 给 ghdigest 日报补中文摘要（英文 `**是什么**` → 中文 `**一句话**`）。当用户说要中文、看不懂英文摘要、要翻译日报，或你要读 digests/ 下的日报时使用。
+description: 给 github-reader 日报补中文摘要（英文 `**是什么**` → 中文 `**一句话**`）。当用户说要中文、看不懂英文摘要、要翻译日报，或你要读 digests/ 下的日报时使用。
 ---
 
 # 给日报补中文摘要
 
-**这个 skill 只做一件事：跑一条命令，然后验证结果。** 翻译本身由 `ghdigest --zh` 内部的
+**这个 skill 只做一件事：跑一条命令，然后验证结果。** 翻译本身由 `github-reader --zh` 内部的
 LLM 调用完成，格式、批量、解析、写回全部是确定性代码。你不要手动改日报文件。
 
 ## 步骤
@@ -14,8 +14,8 @@ LLM 调用完成，格式、批量、解析、写回全部是确定性代码。�
 
 ```bash
 cd <仓库目录>
-python -m ghdigest --zh-only          # 只翻译已有日报，不重新抓取（快，省配额）
-python -m ghdigest --zh               # 完整流程：抓取 + 生成 + 翻译
+python -m github_reader --zh-only          # 只翻译已有日报，不重新抓取（快，省配额）
+python -m github_reader --zh               # 完整流程：抓取 + 生成 + 翻译
 ```
 
 日报已存在、只是缺中文时**一律用 `--zh-only`**。重跑完整流程会重新抓取，
@@ -26,7 +26,7 @@ python -m ghdigest --zh               # 完整流程：抓取 + 生成 + 翻译
 **完成判据：再跑一次，命令报 `待翻译 0 条`。**
 
 ```bash
-python -m ghdigest --zh-only
+python -m github_reader --zh-only
 ```
 
 这是自验证的——比数行数可靠。别用 grep 数 `**一句话**` 的行数：速览条目有
@@ -38,7 +38,7 @@ python -m ghdigest --zh-only
 ### 3. 有缺口就重跑
 
 ```bash
-python -m ghdigest --zh-only
+python -m github_reader --zh-only
 ```
 
 **重跑安全且幂等**：已翻过的条目会被识别并跳过（两阶段扫描，不依赖行序），
@@ -52,7 +52,7 @@ python -m ghdigest --zh-only
 **不要翻译 `**建议**` 字段。** 它由工具生成，本来就是中文；翻译它只会得到
 逐字重复的两行（这个 bug 真发生过）。
 
-**译文质量不满意时**，改的是 `ghdigest/translate.py` 里的 `SYSTEM_PROMPT`，
+**译文质量不满意时**，改的是 `github_reader/translate.py` 里的 `SYSTEM_PROMPT`，
 不是某一份日报里的那句话——改 prompt 才会对以后所有日报生效。
 
 ## 排错

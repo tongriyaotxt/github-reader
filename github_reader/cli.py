@@ -1,9 +1,9 @@
-"""ghdigest 主入口。
+"""github-reader 主入口。
 
 用法：
-    python -m ghdigest              # 生成今天的日报
-    python -m ghdigest --top 8      # 精选 8 条
-    python -m ghdigest --offline    # 只用缓存（不消耗配额）
+    python -m github_reader              # 生成今天的日报
+    python -m github_reader --top 8      # 精选 8 条
+    python -m github_reader --offline    # 只用缓存（不消耗配额）
 """
 
 from __future__ import annotations
@@ -96,7 +96,7 @@ def run(args: argparse.Namespace) -> int:
     settings.offline = args.offline
     settings.verbose = args.verbose
 
-    log(bold(f"\nghdigest v{__version__}") + dim(f"   {datetime.now():%Y-%m-%d %H:%M}"))
+    log(bold(f"\ngithub-reader v{__version__}") + dim(f"   {datetime.now():%Y-%m-%d %H:%M}"))
     log("")
 
     # ---- 客户端 ----
@@ -125,7 +125,7 @@ def run(args: argparse.Namespace) -> int:
 
     if not repos:
         log(yellow("\n没有找到候选仓库。可能原因："))
-        log(yellow("  · 配额耗尽或网络不可达 —— 试 python -m ghdigest --offline"))
+        log(yellow("  · 配额耗尽或网络不可达 —— 试 python -m github_reader --offline"))
         log(yellow("  · config.json 的星数门槛设得太高"))
         return 1
 
@@ -318,18 +318,18 @@ def translate_only(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="ghdigest",
+        prog="github-reader",
         description="把 GitHub 技术动态压缩成一份能读完的日报",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "示例：\n"
-            "  python -m ghdigest                    生成今天的日报\n"
-            "  python -m ghdigest --zh               生成并补中文摘要\n"
-            "  python -m ghdigest --zh-only          只翻译已有日报，不重新抓取\n"
-            "  python -m ghdigest --top 8 --feed 30  精选 8 条 + 动态 30 条\n"
-            "  python -m ghdigest --domains ai       只看 AI/LLM/Agent\n"
-            "  python -m ghdigest --offline          只用缓存，不消耗配额\n"
-            "  python -m ghdigest --verbose          显示被过滤掉的仓库及原因\n"
+            "  python -m github_reader                    生成今天的日报\n"
+            "  python -m github_reader --zh               生成并补中文摘要\n"
+            "  python -m github_reader --zh-only          只翻译已有日报，不重新抓取\n"
+            "  python -m github_reader --top 8 --feed 30  精选 8 条 + 动态 30 条\n"
+            "  python -m github_reader --domains ai       只看 AI/LLM/Agent\n"
+            "  python -m github_reader --offline          只用缓存，不消耗配额\n"
+            "  python -m github_reader --verbose          显示被过滤掉的仓库及原因\n"
         ),
     )
     p.add_argument("--top", type=int, default=None, help="精选条数（默认 5）")
@@ -354,7 +354,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     zh.add_argument("--zh-model", default=None, help="覆盖模型名（默认 deepseek-chat）")
 
-    p.add_argument("--version", action="version", version=f"ghdigest {__version__}")
+    p.add_argument("--version", action="version", version=f"github-reader {__version__}")
     return p
 
 

@@ -99,7 +99,7 @@ def resolve_config(
         or os.environ.get("OPENAI_BASE_URL")
         or DEFAULT_BASE_URL
     ).rstrip("/")
-    cfg.model = model or os.environ.get("GHDIGEST_LLM_MODEL") or DEFAULT_MODEL
+    cfg.model = model or os.environ.get("GITHUB_READER_LLM_MODEL") or DEFAULT_MODEL
     return cfg
 
 
@@ -143,7 +143,7 @@ def chat_json(
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {cfg.api_key}",
-                "User-Agent": "ghdigest/0.1",
+                "User-Agent": "github-reader/0.1",
             },
             method="POST",
         )
