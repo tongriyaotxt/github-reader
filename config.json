@@ -1,0 +1,62 @@
+{
+  "_说明": "ghdigest 配置。改这个文件就能调整关注方向和筛选强度，不需要动代码。删掉本文件则使用内置默认值。",
+
+  "_domains说明": "关注领域的搜索关键词。想加方向就在这里加一组词，每个词会生成 2 条搜索查询（新项目 + 活跃项目）。",
+  "domains": {
+    "AI / LLM / Agent": [
+      "llm",
+      "llm agent",
+      "ai agent framework",
+      "rag retrieval augmented",
+      "llm inference",
+      "mcp model context protocol",
+      "ai coding assistant",
+      "llm fine-tuning",
+      "embedding vector search",
+      "multimodal model"
+    ],
+    "通用工具 / CLI / 效率": [
+      "cli tool",
+      "developer productivity",
+      "terminal tool",
+      "tui",
+      "self-hosted",
+      "automation tool",
+      "devtool",
+      "command line utility"
+    ],
+    "跨领域动量股": [
+      "framework",
+      "runtime",
+      "database",
+      "compiler",
+      "observability",
+      "protocol"
+    ]
+  },
+
+  "_fresh_days说明": "只看最近多少天内创建的新项目（捕捉「新东西」）",
+  "fresh_days": 21,
+  "_active_days说明": "只看最近多少天内有推送的项目（捕捉「还活着的」）",
+  "active_days": 7,
+  "_min_stars说明": "星数门槛。新项目门槛低（星少但可能重要），老项目门槛高（避免刷屏）",
+  "min_stars_fresh": 150,
+  "min_stars_established": 2000,
+  "_evergreen说明": "超过这个星数的常青巨型库会被降权——它们每天推送但不是新闻",
+  "evergreen_star_threshold": 60000,
+  "_per_domain_limit说明": "每条查询最多取多少个结果（上限 100）",
+  "per_domain_limit": 30,
+
+  "_top_picks说明": "精选条数（带完整上手评估）",
+  "top_picks": 5,
+  "_feed_picks说明": "动态速览条数（一行一条）",
+  "feed_picks": 20,
+
+  "_filter说明": "过滤开关",
+  "exclude_awesome_lists": true,
+  "exclude_forks": true,
+  "exclude_archived": true,
+
+  "_cache说明": "搜索结果缓存分钟数。调小=更新鲜但更费配额；README 缓存固定 6 小时",
+  "cache_ttl_minutes": 180
+}

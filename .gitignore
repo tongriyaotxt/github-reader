@@ -1,0 +1,27 @@
+# 缓存：删掉会重新消耗 GitHub 配额，但可以安全重建
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 临时探针脚本（开发期用，不该进版本库）
+_t*.py
+_debug_*.py
+_calibrate*.py
+
+# 冒烟测试用的输出
+digests_smoke/
+config.smoke.json
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 其他 MCP 服务在 cwd 里生成的日志（会被自动重建，删了也没用）
+*.log
